@@ -6,8 +6,8 @@ import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 
 // Routes
-import contactRoutes from "./api/contact.js";
-import feedbackRoutes from "./api/feedback.js";
+import contactRoutes from "./routes/contact.js";
+import feedbackRoutes from "./routes/feedback.js";
 
 dotenv.config();
 
