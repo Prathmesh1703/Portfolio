@@ -7,7 +7,26 @@
     <title>Prathamesh Bharsakale</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <div id="root"></div>
+  
+  <!-- Hidden Netlify forms -->
+  <form name="feedback" data-netlify="true" hidden>
+    <input type="hidden" name="form-name" value="feedback" />
+    <textarea name="message"></textarea>
+    <input name="name" />
+    <input name="bot-field" />
+  </form>
+
+  <form name="contact" data-netlify="true" hidden>
+    <input type="hidden" name="form-name" value="contact" />
+    <input name="name" />
+    <input name="email" />
+    <input name="subject" />
+    <textarea name="message"></textarea>
+    <input name="bot-field" />
+  </form>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
