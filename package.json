@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "start": "node server.js"
   },
-  "engines":{
+  "engines": {
     "node": ">=18 <23"
   },
   "dependencies": {

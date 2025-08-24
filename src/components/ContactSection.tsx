@@ -22,7 +22,7 @@ export function ContactSection() {
   e.preventDefault();
 
   try {
-    const res = await fetch("/api/contact", {
+    const res = await fetch("http://localhost:5000/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -31,14 +31,13 @@ export function ContactSection() {
     const data = await res.json();
 
     if (res.ok) {
-      // success UI
-      alert(data.message || "Message sent!");
+      alert(data.message || "Message sent successfully!");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } else {
       alert(data.error || "Failed to send message.");
     }
   } catch (err) {
-    console.error("Send error:", err);
+    console.error("Error:", err);
     alert("Network error. Please try again later.");
   }
 };

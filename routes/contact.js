@@ -1,11 +1,14 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import express from 'express';
 
 dotenv.config();
 
+const router = express.Router();
+
 // Create transporter
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     service: 'gmail', // You can change this to your preferred email service
     auth: {
       user: process.env.EMAIL_USER,
@@ -261,3 +264,23 @@ export const sendTestEmail = async () => {
     };
   }
 };
+
+router.post('/', async (req, res) => {
+  try {
+    const formData = req.body;
+
+    // Send the contact email
+    const emailResponse = await sendContactEmail(formData);
+
+    if (emailResponse.success) {
+      res.status(200).json({ success: true, message: 'Contact form submitted successfully!' });
+    } else {
+      res.status(500).json({ success: false, error: emailResponse.error });
+    }
+  } catch (error) {
+    console.error('Contact form submission error:', error);
+    res.status(500).json({ success: false, error: 'Failed to submit contact form.' });
+  }
+});
+
+export default router;
