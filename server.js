@@ -175,12 +175,13 @@ if (process.env.NODE_ENV === 'production') {
   console.log("📝 Setting up production static files...");
   const buildDir = path.join(__dirname, "dist");
   app.use(express.static(buildDir));
+  app.use(express.static(path.join(__dirname, 'build')));
   console.log("✅ Static files registered");
   
   console.log("📝 Setting up catch-all route...");
   // Catch-all handler for frontend routes (must be last)
   app.get("*", (req, res) => {
-    res.sendFile(path.join(buildDir, "index.html"));
+    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
   });
   console.log("✅ Catch-all route registered");
 } else {
@@ -208,4 +209,8 @@ process.on('SIGINT', async () => {
   console.log('🛑 SIGINT received, shutting down gracefully...');
   await mongoose.connection.close();
   process.exit(0);
+});
+
+app.get('/api/:id', (req, res) => {
+  res.send(`ID: ${req.params.id}`);
 });
