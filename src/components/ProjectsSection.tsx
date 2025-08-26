@@ -23,7 +23,7 @@ const ProjectsSection: React.FC = () => {
       description: "DeepAssist is a Generative AI chatbot designed to assist developers by solving complex coding problems and providing accurate answers to general programming queries. It utilizes the Deepseek R1 model, integrating advanced Natural Language Processing (NLP) techniques to deliver high-quality coding support.",
       image: "/images/deepAssist.png",
       tags: ["Python", "LangChain", "Deepseek R1", "Stramlit"],
-      githubUrl: "https://github.com",
+      githubUrl: "https://github.com/Prathmesh1703/DeepAssist",
       // liveUrl: "https://example.com"
     },
     {

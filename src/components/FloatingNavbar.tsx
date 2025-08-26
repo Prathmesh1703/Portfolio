@@ -53,7 +53,7 @@ export function FloatingNavbar() {
 
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="bg-surface/40 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 shadow-lg">
+      <div className="bg-surface/20 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 shadow-lg">
         <div className="flex items-center space-x-2">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -63,7 +63,7 @@ export function FloatingNavbar() {
               <div key={item.id} className="relative">
                 {/* Hover tooltip */}
                 {hoveredItem === item.id && (
-                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-surface/90 backdrop-blur-md border border-white/20 rounded-lg px-2 py-1 shadow-lg">
+                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-surface/90 backdrop-blur-sm border border-white/20 rounded-lg px-2 py-1 shadow-lg">
                     <span className="text-xs font-medium text-white whitespace-nowrap">{item.label}</span>
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
                   </div>

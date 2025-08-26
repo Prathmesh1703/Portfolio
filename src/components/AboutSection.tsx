@@ -49,7 +49,7 @@ const AboutSection = () => {
       { name: "HTML5", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
       { name: "SQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" }
     ],
-    "ML/AI Frameworks": [
+    "AI/ML Frameworks": [
       { name: "TensorFlow", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" },
       { name: "PyTorch", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" },
       { name: "Scikit-learn", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" },
@@ -189,16 +189,16 @@ const AboutSection = () => {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(skills).map(([category, skillList], index) => (
-              <div key={index} className="bg-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-[#3FA7D6]/50 transition-all duration-300 min-h-[280px]">
+              <div key={index} className="bg-black/20 backdrop-blur-xl rounded-3xl p-6 border border-white/20 hover:border-[#3FA7D6]/50 transition-all duration-300 min-h-[280px]">
                 <h4 className="text-lg font-semibold text-white mb-6 text-center">{category}</h4>
                 <div className="grid grid-cols-3 gap-3">
                   {skillList.map((skill, skillIndex) => (
                     <div
                       key={skillIndex}
-                      className="group relative aspect-square rounded-xl bg-white/5 border border-white/10 hover:border-[#3FA7D6]/50 hover:shadow-lg hover:shadow-[#3FA7D6]/20 transition-all duration-300 hover:-translate-y-1 hover:scale-105 cursor-pointer overflow-hidden"
+                      className="group relative aspect-square rounded-xl bg-white/10 border border-white/15 hover:border-[#3FA7D6]/50 hover:shadow-lg hover:shadow-[#3FA7D6]/20 transition-all duration-300 hover:-translate-y-1 hover:scale-105 cursor-pointer overflow-hidden"
                     >
                       <div 
-                        className="absolute inset-0 bg-center bg-contain bg-no-repeat opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                        className="absolute inset-0 bg-center bg-contain bg-no-repeat opacity-50 group-hover:opacity-30 transition-opacity duration-300"
                         style={{ backgroundImage: `url(${skill.logo})` }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/40 transition-all duration-300" />
