@@ -1,79 +1,82 @@
-
-import React, { useState } from 'react';
-import { ExternalLink, Github, ArrowUpRight, FolderGit2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ExternalLink, Github, ArrowUpRight, FolderGit2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import ScrollReveal from './ui/ScrollReveal';
+import API_BASE_URL from '@/config/api';
 
+// ── Types ───────────────────────────────────────────────
 interface Project {
-  id: number;
   title: string;
   description: string;
-  image: string;
-  tags: string[];
-  githubUrl: string;
-  liveUrl?: string;
+  github: string;
+  live: string | null;
+  tech: string[];
+  language: string | null;
+  stars: number;
+  updated: string;
 }
 
-const ProjectsSection: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const projectsPerPage = 4;
+// ── Fallback static data (shown if API is unreachable) ──
+const FALLBACK_PROJECTS: Project[] = [
+  {
+    title: "DeepAssist",
+    description: "Generative AI chatbot utilizing Deepseek R1 to assist developers with complex coding problems and general programming queries.",
+    github: "https://github.com/Prathmesh1703/DeepAssist",
+    live: null,
+    tech: ["Python", "LangChain", "Deepseek R1", "Streamlit"],
+    language: "Python",
+    stars: 0,
+    updated: "",
+  },
+  {
+    title: "NyayaBot",
+    description: "AI-powered chatbot providing accessible legal assistance for Indian law, interpreting complex queries with real-time responses.",
+    github: "https://github.com/Prathmesh1703/NyayaBot",
+    live: null,
+    tech: ["Python", "Flask", "NLP", "Scikit-learn"],
+    language: "Python",
+    stars: 0,
+    updated: "",
+  },
+];
 
-  const projects: Project[] = [
-    {
-      id: 1,
-      title: "DeepAssist - AI Coder",
-      description: "Generative AI chatbot utilizing Deepseek R1 to assist developers with complex coding problems and general programming queries.",
-      image: "/images/deepAssist.png",
-      tags: ["Python", "LangChain", "Deepseek R1", "Streamlit"],
-      githubUrl: "https://github.com/Prathmesh1703/DeepAssist",
-    },
-    {
-      id: 2,
-      title: "NyayaBot - Legal AI",
-      description: "AI-powered chatbot providing accessible legal assistance for Indian law, interpreting complex queries with real-time responses.",
-      image: "/images/Nyayabot.png",
-      tags: ["Python", "Flask", "NLP", "Scikit-learn"],
-      githubUrl: "https://github.com/Prathmesh1703/NyayaBot"
-    },
-    {
-      id: 3,
-      title: "Predictive Analytics Dashboard",
-      description: "End-to-end ML pipeline for sales forecasting using ensemble methods, deployed with an interactive Streamlit dashboard.",
-      image: "/images/Finance_Manager.png",
-      tags: ["React", "MongoDB", "ML", "Streamlit"],
-      githubUrl: "https://github.com/Prathmesh1703/Finance_Manager_P4"
-    },
-    {
-      id: 4,
-      title: "Descriptive Analytics",
-      description: "Comprehensive dashboard for visualizing sales data and historical trends to enable data-driven business decisions.",
-      image: "/images/Dashboard.png",
-      tags: ["PowerBI", "Data Viz", "Business Intelligence"],
-      githubUrl: "#"
-    },
-    {
-      id: 5,
-      title: "Movie Recommender",
-      description: "Hybrid recommendation system using collaborative and content-based filtering to suggest personalized movies.",
-      image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop",
-      tags: ["Python", "Scikit-learn", "Pandas", "NumPy"],
-      githubUrl: "https://github.com/Prathmesh1703/Movie-Recommendation-System"
-    },
-    {
-      id: 6,
-      title: "Zomato Sentiment Analysis",
-      description: "NLP-based sentiment analysis of restaurant reviews to extract insights and cluster user feedback.",
-      image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000&auto=format&fit=crop",
-      tags: ["Python", "NLP", "Pandas"],
-      githubUrl: "https://github.com/Prathmesh1703/Zomato_Restaurant_Clustering-_sentiment_analysis"
+// ── Component ───────────────────────────────────────────
+const ProjectsSection = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/projects`);
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+        setProjects(data.projects);
+      } catch {
+        console.warn("Failed to fetch projects, using fallback data.");
+        setProjects(FALLBACK_PROJECTS);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  const visibleProjects = showAll ? projects : projects.slice(0, 2);
+
+  // Build display-friendly tags: GitHub topics + primary language
+  const getTags = (project: Project): string[] => {
+    const tags = [...project.tech];
+    if (project.language && !tags.map(t => t.toLowerCase()).includes(project.language.toLowerCase())) {
+      tags.unshift(project.language);
     }
-  ];
-
-  const totalPages = Math.ceil(projects.length / projectsPerPage);
-  const currentProjects = projects.slice(
-    currentIndex * projectsPerPage,
-    (currentIndex + 1) * projectsPerPage
-  );
+    return tags;
+  };
 
   return (
     <section id="projects" className="py-24 px-6 relative overflow-hidden bg-slate-50/50">
@@ -85,106 +88,150 @@ const ProjectsSection: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6"
+          className="mb-20 text-center"
         >
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground tracking-tight flex items-center gap-3">
-              <FolderGit2 className="text-primary hidden md:block" size={40} />
-              Featured Creations
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-xl">
-              A showcase of intelligent systems and scalable applications.
-            </p>
-          </div>
-
-          {totalPages > 1 && (
-            <div className="flex gap-2">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentIndex(i)}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    i === currentIndex ? "bg-primary w-12" : "bg-slate-200 w-2 hover:bg-slate-300"
-                  )}
-                  aria-label={`Go to page ${i + 1}`}
-                />
-              ))}
-            </div>
-          )}
+          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-foreground tracking-tight flex items-center justify-center gap-3">
+            <FolderGit2 className="text-primary" size={40} />
+            Projects
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+            A showcase of intelligent systems and scalable applications.
+          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
-          <AnimatePresence mode='wait'>
-            {currentProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="group relative rounded-[2rem] overflow-hidden bg-white border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-primary/10 hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
-              >
-                {/* Image Area */}
-                <div className="h-64 overflow-hidden relative">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/20 transition-colors duration-500" />
+        {/* Loading State */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            <p className="text-muted-foreground text-sm">Loading projects...</p>
+          </div>
+        )}
 
-                  {/* Overlay Actions */}
-                  <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 rounded-full bg-white/90 backdrop-blur text-slate-900 hover:bg-primary hover:text-white transition-colors shadow-lg"
-                    >
-                      <Github size={18} />
-                    </a>
-                    {project.liveUrl && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2.5 rounded-full bg-white/90 backdrop-blur text-slate-900 hover:bg-primary hover:text-white transition-colors shadow-lg"
-                      >
-                        <ExternalLink size={18} />
-                      </a>
-                    )}
-                  </div>
-                </div>
+        {/* Error Notice (subtle, non-blocking) */}
+        {error && !loading && (
+          <p className="text-center text-xs text-amber-600/70 mb-8">
+            Showing cached projects — live data will load when backend is available.
+          </p>
+        )}
 
-                {/* Content Area */}
-                <div className="p-8 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-slate-800 group-hover:text-primary transition-colors duration-300">
+        {/* Projects List */}
+        {!loading && (
+          <div className="space-y-24">
+            <AnimatePresence mode="popLayout">
+              {visibleProjects.map((project, index) => (
+                <ScrollReveal
+                  key={project.github + index}
+                  layout
+                  exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                  className={cn(
+                    "flex flex-col lg:flex-row gap-12 items-center"
+                  )}
+                >
+                  {/* Text Content */}
+                  <div className="flex-1 space-y-6 order-2 lg:order-1">
+                    <h3 className="text-3xl font-bold text-slate-900">
                       {project.title}
                     </h3>
-                    <ArrowUpRight className="w-5 h-5 text-slate-300 group-hover:text-primary group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
-                  </div>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {project.description}
+                    </p>
 
-                  <p className="text-muted-foreground mb-6 line-clamp-3 leading-relaxed text-sm flex-grow font-light">
-                    {project.description}
-                  </p>
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {getTags(project).map((tag, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 text-[11px] font-semibold tracking-wide uppercase rounded-full bg-white text-slate-500 border border-slate-200 shadow-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.tags.map((tag, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 text-[11px] font-semibold tracking-wide uppercase rounded-md bg-slate-50 text-slate-500 border border-slate-200 group-hover:border-primary/20 group-hover:text-primary/80 transition-colors"
+                    {project.stars > 0 && (
+                      <p className="text-sm text-slate-500">
+                        ⭐ {project.stars} star{project.stars !== 1 ? 's' : ''}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-4 pt-4">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 text-white font-medium hover:bg-primary transition-colors duration-300 shadow-lg hover:shadow-primary/25"
                       >
-                        {tag}
-                      </span>
-                    ))}
+                        <Github size={18} />
+                        <span>Code</span>
+                      </a>
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-slate-900 border border-slate-200 font-medium hover:border-primary/50 hover:text-primary transition-colors duration-300 shadow-sm"
+                        >
+                          <ExternalLink size={18} />
+                          <span>Live Demo</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+
+                  {/* Visual Preview — GitHub OpenGraph card */}
+                  <div className="flex-1 w-full order-1 lg:order-2 relative">
+                    <div className="relative rounded-3xl shadow-xl aspect-video overflow-hidden bg-slate-900 border-none">
+                      {/* Spinning RGB Gradient Border Layer */}
+                      <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#3b82f6_0%,#8b5cf6_25%,#ec4899_50%,#f97316_75%,#eab308_87%,#3b82f6_100%)]" />
+                      </div>
+                      {/* Content Container — 2px inset creates the thin border */}
+                      <div className="absolute inset-[2px] bg-white rounded-[22px] z-10 overflow-hidden">
+                        <div className="relative w-full h-full">
+                          <img
+                            src={`https://opengraph.githubassets.com/1/${project.github.replace('https://github.com/', '')}`}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {/* View More Button */}
+        {!loading && !showAll && projects.length > 2 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center justify-center mt-20"
+          >
+            <button
+              onClick={() => setShowAll(true)}
+              className="group flex flex-col items-center gap-3 focus:outline-none"
+            >
+              <div className="w-12 h-12 rounded-full border border-slate-300 flex items-center justify-center text-slate-500 group-hover:text-primary group-hover:border-primary transition-colors duration-300 animate-bounce bg-white shadow-sm">
+                <ArrowUpRight size={20} style={{ transform: 'rotate(135deg)' }} />
+              </div>
+              <span className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+                View More Projects ({projects.length - 2} more)
+              </span>
+            </button>
+          </motion.div>
+        )}
+
+        {/* Empty State */}
+        {!loading && projects.length === 0 && (
+          <div className="text-center py-20">
+            <FolderGit2 className="w-16 h-16 mx-auto text-slate-300 mb-4" />
+            <p className="text-muted-foreground">No projects found.</p>
+          </div>
+        )}
       </div>
     </section>
   );

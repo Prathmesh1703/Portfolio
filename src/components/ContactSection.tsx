@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Mail, MapPin, Send, Linkedin, Github, Twitter, Instagram, Copy, Check } from 'lucide-react';
 import { SiHashnode, SiGitlab } from 'react-icons/si';
+import ScrollReveal from './ui/ScrollReveal';
 
 const ContactSection = () => {
   const [isCopied, setIsCopied] = useState(false);
@@ -18,28 +18,18 @@ const ContactSection = () => {
       <div className="absolute bottom-0 left-0 w-full h-[600px] bg-gradient-to-t from-white via-slate-50 to-transparent pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10 w-full flex-grow flex flex-col justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <ScrollReveal className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold mb-6 text-foreground tracking-tight">
             Let's Build the Future
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-light">
             Have a visionary idea or a complex challenge? I'm ready to apply my expertise in AI and Full-Stack development to bring it to life.
           </p>
-        </motion.div>
+        </ScrollReveal>
 
         <div className="grid lg:grid-cols-5 gap-12 lg:gap-20">
           {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2 space-y-10"
-          >
+          <ScrollReveal className="lg:col-span-2 space-y-10">
             <div>
               <h3 className="text-xl font-semibold text-slate-800 mb-6">Contact Details</h3>
               <div className="space-y-6">
@@ -96,15 +86,10 @@ const ContactSection = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </ScrollReveal>
 
           {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-3"
-          >
+          <ScrollReveal className="lg:col-span-3">
             <div className="glass-panel p-8 md:p-10 rounded-[2.5rem] bg-white/40 border border-white/60 shadow-xl shadow-slate-200/40 backdrop-blur-xl">
               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid md:grid-cols-2 gap-6">
@@ -145,9 +130,10 @@ const ContactSection = () => {
                 </button>
               </form>
             </div>
-          </motion.div>
+          </ScrollReveal>
         </div>
       </div>
+
 
       {/* Footer */}
       <div className="relative z-10 mt-20 pt-8 border-t border-slate-200/60 text-center">

@@ -1,33 +1,32 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Briefcase, Calendar, MapPin, Building2, ExternalLink } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import ScrollReveal from './ui/ScrollReveal';
 
 const experiences = [
     {
-        role: "Data Science Club Coordinator",
-        company: "ITSA-TAE",
-        duration: "2024 - 2025",
-        location: "Pune, India",
-        description: "Leading a vibrant community of 150+ students, orchestrating technical workshops, and fostering a culture of innovation in Data Science and AI.",
-        tags: ["Leadership", "Community Building", "Data Science", "Event Management"]
+        role: "AI/Python Developer Intern",
+        company: "Dexpert Systems Pvt. Ltd.",
+        duration: "Internship",
+        description: [
+            "Built full-stack features for a production platform, including real-time interactions, access control, and dynamic dashboards. Boosted system reliability and UX by resolving critical bugs, ensuring UI consistency, and synchronizing data across the stack. Performed cross-functional testing across user roles to identify gaps and deliver features on time."
+        ]
     },
     {
-        role: "Event Lead",
-        company: "State Level Hackathon 2024",
-        duration: "2024",
-        location: "Pune, India",
-        description: "Directed a major state-level hackathon with over 500+ participants. Managed logistics, secured sponsorships, and oversaw technical execution ensuring a seamless event.",
-        tags: ["Event Management", "Technical Leadership", "Logistics"]
+        role: "Full Stack Dev Intern",
+        company: "FitFare",
+        duration: "Internship",
+        description: [
+            "Developed and enhanced AI-powered chatbot features using NLP, memory-based context handling, and personalized logic, improving response relevance and user engagement. Implemented intelligent workflow automation and dynamic query routing, reducing manual support effort and improving system efficiency."
+        ]
     },
     {
-        role: "Software Engineering Intern",
-        company: "Tech Company",
-        duration: "2023",
-        location: "Remote",
-        description: "Contributed to backend architecture using Node.js and MongoDB. Optimized API response times by 20% and implemented robust error handling mechanisms.",
-        tags: ["Node.js", "MongoDB", "Backend Architecture", "API Optimization"]
+        role: "MERN Intern",
+        company: "EYGDS",
+        duration: "Internship",
+        description: [
+            "Built responsive React components and optimized form workflows, improving usability and streamlining day-to-day financial operations. Strengthened backend reliability by refactoring Express APIs and optimizing database interactions, leading to faster responses and improved stability."
+        ]
     }
 ];
 
@@ -39,17 +38,12 @@ const ExperienceSection = () => {
             <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="max-w-5xl mx-auto relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-20"
-                >
-                    <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground tracking-tight">Professional Voyage</h2>
+                <ScrollReveal className="text-center mb-20">
+                    <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground tracking-tight">Experience</h2>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         My journey through leadership, development, and innovation.
                     </p>
-                </motion.div>
+                </ScrollReveal>
 
                 <div className="relative">
                     {/* Center Line */}
@@ -57,12 +51,9 @@ const ExperienceSection = () => {
 
                     <div className="space-y-16">
                         {experiences.map((exp, index) => (
-                            <motion.div
+                            <ScrollReveal
                                 key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.15 }}
+                                delay={index * 0.15}
                                 className={cn(
                                     "relative flex flex-col md:flex-row gap-8 md:gap-16",
                                     index % 2 === 0 ? "md:flex-row-reverse" : ""
@@ -90,23 +81,20 @@ const ExperienceSection = () => {
                                             </span>
                                         </div>
 
-                                        <p className="text-muted-foreground leading-relaxed text-sm mb-6 font-light">
-                                            {exp.description}
-                                        </p>
-
-                                        <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
-                                            {exp.tags.map((tag, i) => (
-                                                <span key={i} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-slate-50 text-slate-600 border border-slate-200 hover:bg-white hover:border-secondary/30 transition-colors">
-                                                    {tag}
-                                                </span>
+                                        <ul className="space-y-3 mb-2">
+                                            {exp.description.map((item, i) => (
+                                                <li key={i} className="text-muted-foreground leading-relaxed text-sm font-light flex gap-3 items-start">
+                                                    <span className="block w-1.5 h-1.5 mt-1.5 rounded-full bg-secondary/60 flex-shrink-0" />
+                                                    <span>{item}</span>
+                                                </li>
                                             ))}
-                                        </div>
+                                        </ul>
                                     </div>
                                 </div>
 
                                 {/* Spacer for alternate side (Desktop only) */}
                                 <div className="flex-1 hidden md:block" />
-                            </motion.div>
+                            </ScrollReveal>
                         ))}
                     </div>
                 </div>
