@@ -1,7 +1,7 @@
 
 import { Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ScrollReveal from './ui/ScrollReveal';
+import { motion } from 'framer-motion';
 
 const experiences = [
     {
@@ -38,12 +38,18 @@ const ExperienceSection = () => {
             <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="max-w-5xl mx-auto relative z-10">
-                <ScrollReveal className="text-center mb-20">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center mb-20"
+                >
                     <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground tracking-tight">Experience</h2>
                     <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                         My journey through leadership, development, and innovation.
                     </p>
-                </ScrollReveal>
+                </motion.div>
 
                 <div className="relative">
                     {/* Center Line */}
@@ -51,9 +57,12 @@ const ExperienceSection = () => {
 
                     <div className="space-y-16">
                         {experiences.map((exp, index) => (
-                            <ScrollReveal
+                            <motion.div
                                 key={index}
-                                delay={index * 0.15}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.15 }}
                                 className={cn(
                                     "relative flex flex-col md:flex-row gap-8 md:gap-16",
                                     index % 2 === 0 ? "md:flex-row-reverse" : ""
@@ -94,7 +103,7 @@ const ExperienceSection = () => {
 
                                 {/* Spacer for alternate side (Desktop only) */}
                                 <div className="flex-1 hidden md:block" />
-                            </ScrollReveal>
+                            </motion.div>
                         ))}
                     </div>
                 </div>

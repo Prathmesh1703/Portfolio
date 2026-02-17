@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Sparkles, PenTool, Coffee, Loader2, ExternalLink } from 'lucide-react';
-import ScrollReveal from './ui/ScrollReveal';
+
 import API_BASE_URL from '@/config/api';
 
 interface BlogPost {
@@ -52,7 +52,13 @@ const BlogsSection = () => {
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="max-w-6xl mx-auto relative z-10 w-full text-center">
-                <ScrollReveal className="mb-16">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-16"
+                >
                     <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground tracking-tight flex items-center justify-center gap-3">
                         <PenTool className="text-primary hidden sm:block" size={32} />
                         Technical Musings
@@ -60,7 +66,7 @@ const BlogsSection = () => {
                     <p className="text-muted-foreground text-lg max-w-xl mx-auto">
                         Thoughts on AI architectures, optimization techniques, and the future of software.
                     </p>
-                </ScrollReveal>
+                </motion.div>
 
                 {/* Loading State */}
                 {loading && (
@@ -72,7 +78,13 @@ const BlogsSection = () => {
 
                 {/* Empty State / Coming Soon (if api returns 0 blogs) */}
                 {!loading && blogs.length === 0 && (
-                    <ScrollReveal className="relative">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="relative"
+                    >
                         {/* Floating Icons Background */}
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <motion.div animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute -top-12 -left-4 text-primary/20"><BookOpen size={64} /></motion.div>
@@ -102,14 +114,20 @@ const BlogsSection = () => {
                                 </button>
                             </div>
                         </div>
-                    </ScrollReveal>
+                    </motion.div>
                 )}
 
                 {/* Blogs Grid (Use this when blogs exist) */}
                 {!loading && blogs.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
                         {blogs.map((blog, index) => (
-                            <ScrollReveal key={index} delay={index * 0.1}>
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                            >
                                 <a href={blog.url} target="_blank" rel="noopener noreferrer" className="group block h-full">
                                     <div className="h-full bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
                                         {/* Cover Image */}
@@ -140,7 +158,7 @@ const BlogsSection = () => {
                                         </div>
                                     </div>
                                 </a>
-                            </ScrollReveal>
+                            </motion.div>
                         ))}
                     </div>
                 )}

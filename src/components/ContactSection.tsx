@@ -1,15 +1,64 @@
 import { useState } from 'react';
 import { Mail, MapPin, Send, Linkedin, Github, Twitter, Instagram, Copy, Check } from 'lucide-react';
 import { SiHashnode, SiGitlab } from 'react-icons/si';
-import ScrollReveal from './ui/ScrollReveal';
+import { motion } from 'framer-motion';
+import API_BASE_URL from '@/config/api';
 
 const ContactSection = () => {
   const [isCopied, setIsCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
 
   const copyEmail = () => {
-    navigator.clipboard.writeText("prathmesh1703@gmail.com");
+    navigator.clipboard.writeText("prathameshpb2004@gmail.com");
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    // Basic client-side validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setError("All fields are required.");
+      setIsLoading(false);
+      return;
+    }
+    if (!formData.email.includes("@")) {
+      setError("Please enter a valid email.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to send message.");
+      }
+
+      setIsSuccess(true);
+      setFormData({ name: '', email: '', message: '' });
+    } catch (err: any) {
+      console.error("Contact Error:", err);
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -18,18 +67,30 @@ const ContactSection = () => {
       <div className="absolute bottom-0 left-0 w-full h-[600px] bg-gradient-to-t from-white via-slate-50 to-transparent pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10 w-full flex-grow flex flex-col justify-center">
-        <ScrollReveal className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-4xl md:text-6xl font-bold mb-6 text-foreground tracking-tight">
             Let's Build the Future
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-light">
             Have a visionary idea or a complex challenge? I'm ready to apply my expertise in AI and Full-Stack development to bring it to life.
           </p>
-        </ScrollReveal>
+        </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-12 lg:gap-20">
           {/* Contact Info */}
-          <ScrollReveal className="lg:col-span-2 space-y-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="lg:col-span-2 space-y-10"
+          >
             <div>
               <h3 className="text-xl font-semibold text-slate-800 mb-6">Contact Details</h3>
               <div className="space-y-6">
@@ -86,51 +147,113 @@ const ContactSection = () => {
                 ))}
               </div>
             </div>
-          </ScrollReveal>
+          </motion.div>
 
           {/* Contact Form */}
-          <ScrollReveal className="lg:col-span-3">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="lg:col-span-3"
+          >
             <div className="glass-panel p-8 md:p-10 rounded-[2.5rem] bg-white/40 border border-white/60 shadow-xl shadow-slate-200/40 backdrop-blur-xl">
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium text-slate-700 ml-1">Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      placeholder="John Doe"
-                      className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
-                    />
+              {!isSuccess ? (
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium text-slate-700 ml-1">Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        disabled={isLoading}
+                        placeholder="John Doe"
+                        className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all disabled:opacity-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium text-slate-700 ml-1">Email</label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        disabled={isLoading}
+                        placeholder="john@example.com"
+                        className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all disabled:opacity-50"
+                      />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-slate-700 ml-1">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      placeholder="john@example.com"
-                      className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
+                    <label htmlFor="message" className="text-sm font-medium text-slate-700 ml-1">Message</label>
+                    <textarea
+                      id="message"
+                      rows={6}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      disabled={isLoading}
+                      placeholder="Tell me about your project..."
+                      className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all resize-none disabled:opacity-50"
                     />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium text-slate-700 ml-1">Message</label>
-                  <textarea
-                    id="message"
-                    rows={6}
-                    placeholder="Tell me about your project..."
-                    className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all resize-none"
-                  />
-                </div>
-                <button className="w-full group relative overflow-hidden rounded-xl bg-slate-900 text-white font-medium py-4 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98]">
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    Send Message
-                    <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </button>
-              </form>
+
+                  {error && (
+                    <p className="text-sm text-red-500 font-medium px-1 animate-pulse">
+                      ⚠ {error}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full group relative overflow-hidden rounded-xl bg-slate-900 text-white font-medium py-4 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {isLoading ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          Send Message
+                          <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                        </>
+                      )}
+                    </span>
+                    {!isLoading && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    )}
+                  </button>
+                </form>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center py-12 text-center space-y-4"
+                >
+                  <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                    <Check size={32} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-800">Message Sent!</h3>
+                  <p className="text-muted-foreground max-w-sm">
+                    Thank you for reaching out. I'll get back to you as soon as possible.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsSuccess(false);
+                      setFormData({ name: '', email: '', message: '' });
+                    }}
+                    className="mt-6 text-sm font-medium text-primary hover:underline"
+                  >
+                    Send another message
+                  </button>
+                </motion.div>
+              )}
             </div>
-          </ScrollReveal>
+          </motion.div>
         </div>
       </div>
 

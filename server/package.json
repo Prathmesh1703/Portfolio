@@ -2,17 +2,19 @@
     "name": "portfolio-backend",
     "version": "1.0.0",
     "description": "Dynamic portfolio backend — GitHub + Hashnode API aggregator",
-    "main": "src/index.js",
+    "main": "server.js",
     "scripts": {
-        "start": "node src/index.js",
-        "dev": "node --watch src/index.js"
+        "start": "node server.js",
+        "dev": "node --watch server.js"
     },
     "dependencies": {
         "cors": "^2.8.5",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
+        "express-rate-limit": "^8.2.1",
         "node-cache": "^5.1.2",
-        "node-fetch": "^2.7.0"
+        "node-fetch": "^2.7.0",
+        "nodemailer": "^8.0.1"
     },
     "engines": {
         "node": ">=18.0.0"

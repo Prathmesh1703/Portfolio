@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award, Code2, Trophy, Brain, University, Layout, Database, Cloud, BarChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ScrollReveal from './ui/ScrollReveal';
+
 
 const AboutSection = () => {
   const [activeTab, setActiveTab] = useState<'about' | 'education' | 'skills' | 'achievements' | 'certifications'>('about');
@@ -116,7 +116,13 @@ const AboutSection = () => {
       <div className="max-w-7xl mx-auto relative z-10 w-full">
 
         {/* Header */}
-        <ScrollReveal className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground tracking-tight">
             Beyond the Code
           </h2>
@@ -151,9 +157,14 @@ const AboutSection = () => {
               </button>
             ))}
           </div>
-        </ScrollReveal>
+        </motion.div>
 
-        <ScrollReveal>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <AnimatePresence mode='wait'>
             {activeTab === 'about' && (
               <motion.div
@@ -349,7 +360,7 @@ const AboutSection = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        </ScrollReveal>
+        </motion.div>
       </div>
     </section>
   );

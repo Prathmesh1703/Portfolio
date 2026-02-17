@@ -4,7 +4,7 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 import { Github, Linkedin, Instagram, Gitlab } from 'lucide-react';
 import { FaXTwitter } from "react-icons/fa6";
 import { SiHashnode } from "react-icons/si";
-import ScrollReveal from './ui/ScrollReveal';
+
 
 const HeroSection = () => {
   const ref = useRef(null);
@@ -40,7 +40,13 @@ const HeroSection = () => {
 
         {/* Left Column: Text Content */}
         <div className="order-2 lg:order-1 flex flex-col justify-center space-y-8 text-center lg:text-left pt-10 lg:pt-0">
-          <ScrollReveal className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6"
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
               AI/ML Engineer, <br className="hidden md:block" />
               MERN Developer & <br className="hidden md:block" />
@@ -50,11 +56,14 @@ const HeroSection = () => {
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
               I'm <span className="font-bold text-foreground">Prathmesh Bharsakle</span>, building machine learning systems and full-stack applications optimized for real-world performance and scalability.
             </p>
-          </ScrollReveal>
+          </motion.div>
 
           {/* Social Media Row */}
-          <ScrollReveal
-            delay={0.4}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
             className="flex flex-wrap gap-x-6 gap-y-4 justify-center lg:justify-start pt-2"
           >
             {[
@@ -81,12 +90,18 @@ const HeroSection = () => {
                 </span>
               </motion.a>
             ))}
-          </ScrollReveal>
+          </motion.div>
         </div>
 
         {/* Right Column: Organic Image */}
         <div className="order-1 lg:order-2 flex justify-center items-center relative" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-          <ScrollReveal delay={0.2} className="relative flex justify-center items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative flex justify-center items-center"
+          >
             {/* Rotating Ring */}
             <motion.div
               animate={{ rotate: 360 }}
@@ -138,7 +153,7 @@ const HeroSection = () => {
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
               />
             </motion.div>
-          </ScrollReveal>
+          </motion.div>
         </div>
       </div>
     </section>

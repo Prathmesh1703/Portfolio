@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ExternalLink, Github, ArrowUpRight, FolderGit2, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import ScrollReveal from './ui/ScrollReveal';
+
 import API_BASE_URL from '@/config/api';
 
 // ── Types ───────────────────────────────────────────────
@@ -15,6 +15,7 @@ interface Project {
   language: string | null;
   stars: number;
   updated: string;
+  previewImage: string;
 }
 
 // ── Fallback static data (shown if API is unreachable) ──
@@ -28,6 +29,7 @@ const FALLBACK_PROJECTS: Project[] = [
     language: "Python",
     stars: 0,
     updated: "",
+    previewImage: "https://opengraph.githubassets.com/1/Prathmesh1703/DeepAssist",
   },
   {
     title: "NyayaBot",
@@ -38,8 +40,44 @@ const FALLBACK_PROJECTS: Project[] = [
     language: "Python",
     stars: 0,
     updated: "",
+    previewImage: "https://opengraph.githubassets.com/1/Prathmesh1703/NyayaBot",
   },
 ];
+
+// ── Image Preview Component ─────────────────────────────
+const ImagePreview = ({ src, alt, fallback }: { src: string; alt: string; fallback: string }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <div className="relative w-full h-full bg-slate-900">
+      {/* Loading Skeleton */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-800 animate-pulse z-20">
+          <FolderGit2 className="w-10 h-10 text-slate-700 opacity-50" />
+        </div>
+      )}
+
+      <img
+        src={imgSrc}
+        alt={alt}
+        className={cn(
+          "w-full h-full object-cover transition-opacity duration-700",
+          isLoading ? "opacity-0" : "opacity-100"
+        )}
+        onLoad={() => setIsLoading(false)}
+        onError={() => {
+          if (!hasError) {
+            setHasError(true);
+            setImgSrc(fallback);
+          }
+        }}
+        loading="lazy"
+      />
+    </div>
+  );
+};
 
 // ── Component ───────────────────────────────────────────
 const ProjectsSection = () => {
@@ -97,6 +135,25 @@ const ProjectsSection = () => {
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             A showcase of intelligent systems and scalable applications.
           </p>
+
+          {/* Fresh Data Notice (Visible when backend is healthy) */}
+          {!error && !loading && (
+            <p className="text-xs text-slate-400 mt-4 flex items-center justify-center gap-1.5 opacity-80">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              Projects update automatically from GitHub. Changes may take up to 10 minutes to reflect.
+            </p>
+          )}
+
+          {/* Backend Status Warning */}
+          {error && (
+            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600/80 text-xs font-medium">
+              <span>⚠</span>
+              Backend is not running. Showing last cached or fallback data. Updates may be delayed.
+            </div>
+          )}
         </motion.div>
 
         {/* Loading State */}
@@ -107,21 +164,20 @@ const ProjectsSection = () => {
           </div>
         )}
 
-        {/* Error Notice (subtle, non-blocking) */}
-        {error && !loading && (
-          <p className="text-center text-xs text-amber-600/70 mb-8">
-            Showing cached projects — live data will load when backend is available.
-          </p>
-        )}
+
 
         {/* Projects List */}
         {!loading && (
           <div className="space-y-24">
             <AnimatePresence mode="popLayout">
               {visibleProjects.map((project, index) => (
-                <ScrollReveal
+                <motion.div
                   key={project.github + index}
                   layout
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
                   exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                   className={cn(
                     "flex flex-col lg:flex-row gap-12 items-center"
@@ -177,27 +233,26 @@ const ProjectsSection = () => {
                     </div>
                   </div>
 
-                  {/* Visual Preview — GitHub OpenGraph card */}
+                  {/* Visual Preview — Hybrid GitHub Image */}
                   <div className="flex-1 w-full order-1 lg:order-2 relative">
-                    <div className="relative rounded-3xl shadow-xl aspect-video overflow-hidden bg-slate-900 border-none">
+                    <div className="relative rounded-3xl shadow-xl aspect-video overflow-hidden bg-slate-900 border-none group">
                       {/* Spinning RGB Gradient Border Layer */}
                       <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#3b82f6_0%,#8b5cf6_25%,#ec4899_50%,#f97316_75%,#eab308_87%,#3b82f6_100%)]" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#3b82f6_0%,#8b5cf6_25%,#ec4899_50%,#f97316_75%,#eab308_87%,#3b82f6_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                       </div>
-                      {/* Content Container — 2px inset creates the thin border */}
-                      <div className="absolute inset-[2px] bg-white rounded-[22px] z-10 overflow-hidden">
-                        <div className="relative w-full h-full">
-                          <img
-                            src={`https://opengraph.githubassets.com/1/${project.github.replace('https://github.com/', '')}`}
-                            alt={project.title}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
-                        </div>
+
+                      {/* Content Container */}
+                      <div className="absolute inset-[2px] bg-slate-900 rounded-[22px] z-10 overflow-hidden">
+                        <ImagePreview
+                          key={project.previewImage}
+                          src={project.previewImage}
+                          alt={project.title}
+                          fallback={`https://opengraph.githubassets.com/1/Prathmesh1703/${project.title.replace(/ /g, "-")}`}
+                        />
                       </div>
                     </div>
                   </div>
-                </ScrollReveal>
+                </motion.div>
               ))}
             </AnimatePresence>
           </div>
