@@ -101,8 +101,8 @@ const ContactSection = () => {
                   <div className="flex-1">
                     <p className="text-sm text-slate-500 font-medium mb-1">Email</p>
                     <div className="flex items-center gap-2">
-                      <a href="mailto:prathmesh1703@gmail.com" className="text-slate-800 font-medium hover:text-primary transition-colors">
-                        prathmesh1703@gmail.com
+                      <a href="mailto:prathameshpb2004@gmail.com" className="text-slate-800 font-medium hover:text-primary transition-colors">
+                        prathameshpb2004@gmail.com
                       </a>
                       <button onClick={copyEmail} className="text-slate-400 hover:text-slate-600 transition-colors" title="Copy Email">
                         {isCopied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
@@ -261,7 +261,7 @@ const ContactSection = () => {
       {/* Footer */}
       <div className="relative z-10 mt-20 pt-8 border-t border-slate-200/60 text-center">
         <p className="text-slate-500 text-sm flex items-center justify-center gap-1">
-          © {new Date().getFullYear()} Prathmesh Bharsakle. Crafted with <span className="text-red-500 animate-pulse">❤</span> and React.
+          © {new Date().getFullYear()} Prathmesh Bharsakle.
         </p>
       </div>
     </section>
