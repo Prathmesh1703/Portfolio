@@ -1,13 +1,16 @@
 
 import { HeroSection } from './components/HeroSection';
-import ProjectsSection from './components/ProjectsSection';
 import AboutSection from './components/AboutSection';
 import ExperienceSection from './components/ExperienceSection';
-import BlogsSection from './components/BlogsSection';
-import ContactSection from './components/ContactSection';
 import { FloatingNavbar } from './components/FloatingNavbar';
 import { motion, useMotionValue, useMotionTemplate, useSpring } from 'framer-motion';
-import React from 'react';
+import React, { Suspense } from 'react';
+import SectionLoader from './components/SectionLoader';
+
+// Lazy Load Heavy Sections
+const ProjectsSection = React.lazy(() => import('./components/ProjectsSection'));
+const BlogsSection = React.lazy(() => import('./components/BlogsSection'));
+const ContactSection = React.lazy(() => import('./components/ContactSection'));
 
 function App() {
   // Mouse tracking for organic reveal effect
@@ -155,14 +158,21 @@ function App() {
         <HeroSection />
         <AboutSection />
         <ExperienceSection />
-        <ProjectsSection />
-        <BlogsSection />
-        <ContactSection />
+
+        <Suspense fallback={<SectionLoader />}>
+          <ProjectsSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionLoader />}>
+          <BlogsSection />
+        </Suspense>
       </main>
 
-      <FloatingNavbar />
+      <Suspense fallback={<SectionLoader />}>
+        <ContactSection />
+      </Suspense>
 
-      {/* Footer */}
+      <FloatingNavbar />
 
 
     </div>

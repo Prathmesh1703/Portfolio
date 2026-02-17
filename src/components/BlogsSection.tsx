@@ -26,15 +26,46 @@ const BlogsSection = () => {
                 if (!res.ok) throw new Error("API error");
                 const data = await res.json();
                 setBlogs(data.blogs);
+
+                // Update Cache
+                localStorage.setItem("blogs_cache", JSON.stringify(data.blogs));
+                localStorage.setItem("blogs_cache_time", Date.now().toString());
+
+                setError(false);
             } catch {
                 console.warn("Failed to fetch blogs.");
-                setError(true);
+                const cached = localStorage.getItem("blogs_cache");
+
+                if (!cached) {
+                    setError(true);
+                }
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchBlogs();
+        const loadData = () => {
+            const cached = localStorage.getItem("blogs_cache");
+            const timestamp = localStorage.getItem("blogs_cache_time");
+            const now = Date.now();
+            const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+            if (cached && timestamp && (now - parseInt(timestamp) < CACHE_DURATION)) {
+                // Cache Hit
+                setBlogs(JSON.parse(cached));
+                setLoading(false);
+
+                // Silent Revalidation
+                fetchBlogs();
+            } else {
+                fetchBlogs();
+            }
+        };
+
+        // Defer execution
+        setTimeout(() => {
+            loadData();
+        }, 0);
     }, []);
 
     // Helper to format date
@@ -61,7 +92,7 @@ const BlogsSection = () => {
                 >
                     <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground tracking-tight flex items-center justify-center gap-3">
                         <PenTool className="text-primary hidden sm:block" size={32} />
-                        Technical Musings
+                        Blogs
                     </h2>
                     <p className="text-muted-foreground text-lg max-w-xl mx-auto">
                         Thoughts on AI architectures, optimization techniques, and the future of software.

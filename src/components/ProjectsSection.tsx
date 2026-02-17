@@ -93,16 +93,49 @@ const ProjectsSection = () => {
         if (!res.ok) throw new Error("API error");
         const data = await res.json();
         setProjects(data.projects);
+
+        // Update Cache
+        localStorage.setItem("projects_cache", JSON.stringify(data.projects));
+        localStorage.setItem("projects_cache_time", Date.now().toString());
+
+        setError(false);
       } catch {
-        console.warn("Failed to fetch projects, using fallback data.");
-        setProjects(FALLBACK_PROJECTS);
-        setError(true);
+        console.warn("Failed to fetch projects.");
+        const cached = localStorage.getItem("projects_cache");
+
+        if (!cached) {
+          setProjects(FALLBACK_PROJECTS);
+          setError(true);
+        }
+        // If cached exists, we silently ignore the error and keep showing cached data
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProjects();
+    const loadData = () => {
+      const cached = localStorage.getItem("projects_cache");
+      const timestamp = localStorage.getItem("projects_cache_time");
+      const now = Date.now();
+      const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+
+      if (cached && timestamp && (now - parseInt(timestamp) < CACHE_DURATION)) {
+        // Cache Hit: Load immediately
+        setProjects(JSON.parse(cached));
+        setLoading(false);
+
+        // Silent Revalidate (Background Update)
+        fetchProjects();
+      } else {
+        // Cache Miss or Expired: Fetch normally
+        fetchProjects();
+      }
+    };
+
+    // Defer execution to unblock main thread for initial render
+    setTimeout(() => {
+      loadData();
+    }, 0);
   }, []);
 
   const visibleProjects = showAll ? projects : projects.slice(0, 2);

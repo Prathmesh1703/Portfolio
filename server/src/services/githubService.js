@@ -23,11 +23,22 @@ async function fetchGitHubProjects(username) {
 
     // Build headers — token is optional
     const headers = { Accept: "application/vnd.github.v3+json" };
+    let usingToken = false;
     if (process.env.GITHUB_TOKEN) {
         headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+        usingToken = true;
     }
 
-    const response = await fetch(url, { headers });
+    console.log(`[GitHub] Fetching repos for ${username} (Token: ${usingToken ? "YES" : "NO"})...`);
+
+    let response = await fetch(url, { headers });
+
+    // Retry without token if 401 (Bad credentials)
+    if (response.status === 401 && usingToken) {
+        console.warn("[GitHub] Token rejected (401). Retrying without token...");
+        delete headers.Authorization;
+        response = await fetch(url, { headers });
+    }
 
     if (!response.ok) {
         const text = await response.text();

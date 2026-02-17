@@ -259,10 +259,38 @@ const ContactSection = () => {
 
 
       {/* Footer */}
-      <div className="relative z-10 mt-20 pt-8 border-t border-slate-200/60 text-center">
-        <p className="text-slate-500 text-sm flex items-center justify-center gap-1">
-          © {new Date().getFullYear()} Prathmesh Bharsakle.
-        </p>
+      <div className="relative z-10 mt-20 pt-8 border-t border-slate-200/60 flex justify-start">
+        <motion.div
+          className="relative inline-block overflow-hidden cursor-default"
+          initial="initial"
+          whileHover="hover"
+        >
+          {/* Invisible Spacer to set width/height based on longest text */}
+          <span className="invisible block text-sm font-medium px-1">
+            Optimizing loss, minimizing regret.
+          </span>
+
+          <motion.span
+            className="absolute top-0 left-0 block text-slate-500 text-sm w-full"
+            variants={{
+              initial: { y: 0, opacity: 1 },
+              hover: { y: -24, opacity: 0 }
+            }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            © {new Date().getFullYear()} Prathmesh Bharsakle.
+          </motion.span>
+          <motion.span
+            className="absolute top-0 left-0 block text-slate-700 text-sm font-medium w-full"
+            variants={{
+              initial: { y: 24, opacity: 0 },
+              hover: { y: 0, opacity: 1 }
+            }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Optimizing loss, minimizing regret.
+          </motion.span>
+        </motion.div>
       </div>
     </section>
   );
