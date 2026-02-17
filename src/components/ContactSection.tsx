@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, MapPin, Send, Linkedin, Github, Twitter, Instagram, Copy, Check } from 'lucide-react';
+import { Mail, MapPin, Send, Linkedin, Github, Twitter, Instagram, Copy, Check, Download } from 'lucide-react';
 import { SiHashnode, SiGitlab } from 'react-icons/si';
 import { motion } from 'framer-motion';
 import API_BASE_URL from '@/config/api';
@@ -145,6 +145,24 @@ const ContactSection = () => {
                     <social.icon size={20} />
                   </a>
                 ))}
+
+                {/* Resume Download Button (Styled like social links) */}
+                <a
+                  href={(() => {
+                    const url = import.meta.env.VITE_RESUME_URL || "";
+                    const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                      return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                    }
+                    return url;
+                  })()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-500 hover:text-white hover:bg-slate-900 hover:border-slate-900 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
+                  title="Download Resume"
+                >
+                  <Download size={20} />
+                </a>
               </div>
             </div>
           </motion.div>
@@ -291,6 +309,7 @@ const ContactSection = () => {
             Optimizing loss, minimizing regret.
           </motion.span>
         </motion.div>
+
       </div>
     </section>
   );

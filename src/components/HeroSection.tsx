@@ -1,7 +1,7 @@
 
 import { useRef } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
-import { Github, Linkedin, Instagram, Gitlab } from 'lucide-react';
+import { Github, Linkedin, Instagram, Gitlab, Download } from 'lucide-react';
 import { FaXTwitter } from "react-icons/fa6";
 import { SiHashnode } from "react-icons/si";
 
@@ -56,6 +56,34 @@ const HeroSection = () => {
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
               I'm <span className="font-bold text-foreground">Prathmesh Bharsakle</span>, building machine learning systems and full-stack applications optimized for real-world performance and scalability.
             </p>
+          </motion.div>
+
+          {/* Resume Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-wrap gap-4 justify-center lg:justify-start -mt-2"
+          >
+            <a
+              href={(() => {
+                const url = import.meta.env.VITE_RESUME_URL || "";
+                // specific fix for file/d/ links to convert to direct download
+                const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                  return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                }
+                return url;
+              })()}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Download Resume"
+              className="group flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/50 border border-slate-200 text-slate-600 text-sm font-medium hover:bg-white hover:text-primary hover:border-primary/20 transition-all duration-300 shadow-sm hover:shadow-md backdrop-blur-sm"
+            >
+              <span>Download Resume</span>
+              <Download size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+            </a>
           </motion.div>
 
           {/* Social Media Row */}
