@@ -187,7 +187,7 @@ const ContactSection = () => {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         disabled={isLoading}
-                        placeholder="John Doe"
+                        placeholder="Thakur Baldev Singh"
                         className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all disabled:opacity-50"
                       />
                     </div>
@@ -199,7 +199,7 @@ const ContactSection = () => {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         disabled={isLoading}
-                        placeholder="john@example.com"
+                        placeholder="MaaMereHaathKabAyege@gmail.com"
                         className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all disabled:opacity-50"
                       />
                     </div>
@@ -212,7 +212,7 @@ const ContactSection = () => {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       disabled={isLoading}
-                      placeholder="Tell me about your project..."
+                      placeholder="Contact me for Thakur's Hands....."
                       className="w-full bg-white/60 border border-slate-200 rounded-xl px-5 py-3.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all resize-none disabled:opacity-50"
                     />
                   </div>

@@ -19,7 +19,7 @@ const AboutSection = () => {
         {
           degree: "B.E. in Information Technology",
           year: "2022-2026",
-          grade: "SGPA: 8.6" // Placeholder value
+          grade: "CGPA: 7.47" // Placeholder value
         },
         {
           degree: "Honors in AI/ML",
@@ -194,7 +194,7 @@ const AboutSection = () => {
                   <div className="glass-panel p-8 rounded-2xl relative overflow-hidden group border border-white/60">
                     <div className="space-y-4 text-muted-foreground leading-relaxed text-lg font-light">
                       <p>
-                        I’m an AI/ML Engineer and MERN Stack Developer pursuing a B.E. in Information Technology with Honors in AI/ML. My work centers on building intelligent systems, NLP pipelines, and full-stack applications that scale in real environments. I’ve competed in 5+ hackathons, led student tech communities, and completed internships where I developed production-ready ML models and backend systems using cloud services.
+                        I’m an AI/ML Engineer and Writer (Sort of) Completed B.E. in Information Technology with Specialization in AI/ML. My work centers on building intelligent systems, NLP pipelines, and full-stack applications that scale in real environments. I’ve competed in 5+ hackathons, led student tech communities, and completed internships where I developed production-ready ML models and backend systems using cloud services.
                       </p>
                       <p>
                         I hold certifications in Machine Learning, AWS Generative AI, and Agile practices, and I actively mentor peers through workshops. My stack includes Python, JavaScript, TensorFlow, PyTorch, React, Node.js, Docker, and MongoDB. I focus on clean architecture, performance, and bridging the gap between research and real product deployment.

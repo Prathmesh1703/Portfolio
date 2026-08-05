@@ -107,8 +107,45 @@ const BlogsSection = () => {
                     </div>
                 )}
 
+                {/* Error State — API failed and no cache */}
+                {!loading && error && blogs.length === 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="glass-panel p-10 rounded-[2.5rem] border border-red-100 bg-red-50/40 shadow-sm max-w-xl mx-auto"
+                    >
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                                <BookOpen className="text-red-400" size={28} />
+                            </div>
+                            <h3 className="text-lg font-semibold text-slate-700">Couldn't load blogs right now</h3>
+                            <p className="text-sm text-muted-foreground text-center max-w-sm">
+                                The server may be waking up from sleep. Please try again in a moment.
+                            </p>
+                            <div className="flex flex-wrap items-center justify-center gap-3">
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="px-6 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-colors"
+                                >
+                                    Retry
+                                </button>
+                                <a
+                                    href="https://hashnode.com/@Prathmesh3000"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1.5 px-6 py-2 rounded-full border border-slate-200 text-slate-600 text-sm font-medium hover:border-primary/40 hover:text-primary transition-colors"
+                                >
+                                    Visit my Hashnode <ExternalLink size={13} />
+                                </a>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
                 {/* Empty State / Coming Soon (if api returns 0 blogs) */}
-                {!loading && blogs.length === 0 && (
+                {!loading && !error && blogs.length === 0 && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -136,13 +173,23 @@ const BlogsSection = () => {
                                     <br />Good things take time.
                                 </p>
 
-                                <button className="group relative px-8 py-3 rounded-full bg-slate-900 text-white font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
-                                    <span className="relative z-10 flex items-center gap-2">
-                                        Notify Me
-                                        <Sparkles size={16} className="text-yellow-400 group-hover:spin-slow" />
-                                    </span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                </button>
+                                <div className="flex flex-wrap items-center justify-center gap-3">
+                                    <button className="group relative px-8 py-3 rounded-full bg-slate-900 text-white font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
+                                        <span className="relative z-10 flex items-center gap-2">
+                                            Notify Me
+                                            <Sparkles size={16} className="text-yellow-400 group-hover:spin-slow" />
+                                        </span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    </button>
+                                    <a
+                                        href="https://hashnode.com/@Prathmesh3000"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-1.5 px-8 py-3 rounded-full border border-slate-200 text-slate-600 text-sm font-medium hover:border-primary/40 hover:text-primary hover:-translate-y-0.5 transition-all duration-300 shadow-sm"
+                                    >
+                                        Read on Hashnode <ExternalLink size={14} />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </motion.div>

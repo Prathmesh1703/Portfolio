@@ -1,86 +1,77 @@
 // ──────────────────────────────────────────────────────────
-// Hashnode Service — Fetches & formats blog posts via GraphQL
-// Scalable version (fetches across all publications)
+// Hashnode Service — Fetches & formats blog posts via RSS feed
+//
+// NOTE: Hashnode's GraphQL API became paid-only on 2026-05-13.
+// We now use the free public RSS feed instead:
+//   https://{host}/rss.xml
 // ──────────────────────────────────────────────────────────
 
 const fetch = require("node-fetch");
+const { XMLParser } = require("fast-xml-parser");
 
-const HASHNODE_GQL = "https://gql.hashnode.com/";
+const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "@_" });
 
 /**
- * GraphQL query to pull latest blog posts for a Hashnode user.
- * This fetches posts across ALL publications owned by the user.
+ * Estimates reading time from plain text (avg 200 wpm).
  */
-const BLOGS_QUERY = `
-  query GetUserBlogs($username: String!, $pageSize: Int!) {
-    user(username: $username) {
-      posts(pageSize: $pageSize, page: 1) {
-        edges {
-          node {
-            title
-            brief
-            slug
-            url
-            publishedAt
-            readTimeInMinutes
-            coverImage {
-              url
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+function estimateReadTime(text = "") {
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
 
 /**
- * Fetches the latest blog posts for a Hashnode user.
+ * Strips HTML tags from a string.
+ */
+function stripHtml(html = "") {
+  return html.replace(/<[^>]*>/g, "").trim();
+}
+
+/**
+ * Fetches the latest blog posts from a Hashnode publication RSS feed.
  *
- * @param {string} username - Hashnode username
- * @param {number} count - Number of posts to fetch
+ * @param {string} host  - Publication host, e.g. "prathmeshbharsakal.hashnode.dev"
+ * @param {number} count - Max number of posts to return
  *
  * Returns a clean array of blog objects ready for frontend consumption.
  */
-async function fetchHashnodeBlogs(username, count = 20) {
-  const response = await fetch(HASHNODE_GQL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: BLOGS_QUERY,
-      variables: {
-        username,
-        pageSize: count,
-      },
-    }),
+async function fetchHashnodeBlogs(host, count = 20) {
+  const rssUrl = `https://${host}/rss.xml`;
+
+  const response = await fetch(rssUrl, {
+    headers: { "Accept": "application/rss+xml, application/xml, text/xml" },
   });
 
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Hashnode API ${response.status}: ${text}`);
+    throw new Error(`RSS feed fetch failed: ${response.status} ${response.statusText}`);
   }
 
-  const { data, errors } = await response.json();
+  const xml = await response.text();
+  const parsed = parser.parse(xml);
 
-  if (errors) {
-    throw new Error(`Hashnode GraphQL error: ${JSON.stringify(errors)}`);
-  }
+  const items = parsed?.rss?.channel?.item;
 
-  // If user or posts don't exist
-  if (!data?.user?.posts?.edges) {
-    return [];
-  }
+  if (!items) return [];
 
-  const blogs = data.user.posts.edges.map(({ node }) => ({
-    title: node.title,
-    description: node.brief,
-    slug: node.slug,
-    cover: node.coverImage?.url || null,
-    readTime: node.readTimeInMinutes,
-    date: node.publishedAt,
-    url: node.url, // Directly use Hashnode-provided URL
-  }));
+  // Normalise: single item comes as object, multiple as array
+  const rawItems = Array.isArray(items) ? items : [items];
+
+  const blogs = rawItems.slice(0, count).map((item) => {
+    const description = stripHtml(item.description || item["content:encoded"] || "");
+    const cover =
+      item["media:content"]?.["@_url"] ||
+      item.enclosure?.["@_url"] ||
+      null;
+
+    return {
+      title:       item.title || "Untitled",
+      description: description.slice(0, 300) || "",
+      slug:        (item.link || "").split("/").pop() || "",
+      cover,
+      readTime:    estimateReadTime(description),
+      date:        item.pubDate || new Date().toISOString(),
+      url:         item.link || "",
+    };
+  });
 
   return blogs;
 }

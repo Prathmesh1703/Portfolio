@@ -2,11 +2,12 @@
 // API Configuration
 // ──────────────────────────────────────────────────────────
 //
-// In development : http://localhost:5000
-// In production  : Your deployed Render URL
+// VITE_API_URL must be set in your hosting platform's environment
+// variables (Vercel / Netlify / Render dashboard).
+//
+// Example: VITE_API_URL=https://portfolio-2a9w.onrender.com
 // ──────────────────────────────────────────────────────────
 
-const API_BASE_URL =
-    import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:5000" : "");
+const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 
 export default API_BASE_URL;

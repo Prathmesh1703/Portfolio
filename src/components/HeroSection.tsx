@@ -49,12 +49,12 @@ const HeroSection = () => {
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
               AI/ML Engineer, <br className="hidden md:block" />
-              MERN Developer & <br className="hidden md:block" />
+              Full Stack Developer & <br className="hidden md:block" />
               Technical Writer
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
-              I'm <span className="font-bold text-foreground">Prathmesh Bharsakle</span>, building machine learning systems and full-stack applications optimized for real-world performance and scalability.
+              I'm <span className="font-bold text-foreground">Prathmesh Bharsakle</span>, building scalable AI, ML and Full-Stack solutions for enterprise applications optimized for real-world performance and scalability.
             </p>
           </motion.div>
 
@@ -69,12 +69,16 @@ const HeroSection = () => {
             <a
               href={(() => {
                 const url = import.meta.env.VITE_RESUME_URL || "";
-                // specific fix for file/d/ links to convert to direct download
-                const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) {
-                  return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                if (url) {
+                  // specific fix for file/d/ links to convert to direct download
+                  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                  if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                  }
+                  return url;
                 }
-                return url;
+                // Fallback: serve PDF from public folder
+                return "/images/Prathmesh_Bharsakle_Resume.pdf";
               })()}
               target="_blank"
               rel="noopener noreferrer"

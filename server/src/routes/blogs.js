@@ -17,8 +17,8 @@ router.get("/", async (_req, res) => {
             return res.json({ source: "cache", count: cached.length, blogs: cached });
         }
 
-        const username = process.env.HASHNODE_USERNAME || "Prathmesh3000";
-        const blogs = await fetchHashnodeBlogs(username);
+        const host = process.env.HASHNODE_HOST || "langchainseries.hashnode.dev";
+        const blogs = await fetchHashnodeBlogs(host);
 
         // 3. Store in cache
         cache.set(CACHE_KEY, blogs);
