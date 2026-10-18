@@ -100,7 +100,7 @@ const HeroSection = () => {
           >
             {[
               { icon: Github, label: "GitHub", href: "https://github.com/Prathmesh1703" },
-              { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/prathamesh-bharsakale-bb3452257/" },
+              { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/prathmesh-bharsakale-bb3452257/" },
               { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/prathmesh3000_?igsh=MW83eDh2aDlkYzR2dQ==" },
               { icon: FaXTwitter, label: "X", href: "https://x.com/prathmesh3000" },
               { icon: Gitlab, label: "GitLab", href: "https://gitlab.com/prathameshpb2004" },
