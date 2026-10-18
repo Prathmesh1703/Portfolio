@@ -78,7 +78,7 @@ const HeroSection = () => {
                   return url;
                 }
                 // Fallback: serve PDF from public folder
-                return "/images/Prathmesh_Bharsakle_Resume.pdf";
+                return "public/images/PrathmeshBharsakaleResume.pdf";
               })()}
               target="_blank"
               rel="noopener noreferrer"
