@@ -73,7 +73,7 @@ const HeroSection = () => {
                   // specific fix for file/d/ links to convert to direct download
                   const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
                   if (match && match[1]) {
-                    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                    return `https://drive.google.com/file/d/1VBhhwTJmzYqTpYZvtwLYj9xGWvSJ1QVl?usp=sharing?export=download&id=${match[1]}`;
                   }
                   return url;
                 }
